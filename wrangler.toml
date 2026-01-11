@@ -4,4 +4,4 @@ compatibility_date = "2026-01-11"
 
 [[kv_namespaces]]
 binding = "CFBLOG"
-id = "685f52ed13388befb75f5964002fdd01" # 这里的 ID 应该根据实际情况修改，目前先用 index.js 中的 cacheZoneId 作为占位符
+id = "4552fe2a19274b8393d8979844d8edc8" # 这里的 ID 应该根据实际情况修改，目前先用 index.js 中的 cacheZoneId 作为占位符
