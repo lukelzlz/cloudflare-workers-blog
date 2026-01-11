@@ -1,11 +1,11 @@
 'use strict';
 const OPT = {
-    "user" : "admin", //后台密码请修改
-    "password" : "yourSelfPwd", //后台密码
-    "siteDomain" : "blog.gezhong.vip",// 域名(不带https 也不带/)
-    "siteName" : "CF workers blog",//博客名称
-    "siteDescription":"A Blog Powered By Cloudflare Workers and KV",//博客描述
-    "keyWords":"cloudflare,KV,workers,blog",//关键字
+    "user" : "lukelzlz", //后台密码请修改
+    "password" : "lukelzlz2009", //后台密码
+    "siteDomain" : "blog.lukelzlz.top",// 域名(不带https 也不带/)
+    "siteName" : "lukelzlz 的博客",//博客名称
+    "siteDescription":"会一直有人陪你，不会有人一直陪你",//博客描述
+    "keyWords":"cloudflare,workers,blog,docker,study,php,python,minecraft,linux",//关键字
     "cacheZoneId":"cc868e8edce4027ad4a735741111111",//清理缓存用 cf区域 ID
     "cacheToken":"LNxRWH-MPMIGnp8qhyT8FUsjDRN6tdOnmaaaaaaa",//清理缓存用 cf API token
 	
@@ -13,7 +13,7 @@ const OPT = {
     "recentlySize" : 6,//最近文章数
     "readMoreLength":150,//阅读更多截取长度	
     "cacheTime" : 60*60*24*0.5, //网页缓存时长(秒),建议=文章更新频率
-    "themeURL" : "https://raw.githubusercontent.com/gdtool/cloudflare-workers-blog/master/themes/default2.0/", // 模板地址,以 "/"" 结尾
+    "themeURL" : "https://raw.githubusercontent.com/lukelzlz/cloudflare-workers-blog/master/themes/jasmine/", // 模板地址,以 "/"" 结尾
     "html404" : `<b>404</b>`,//404页面代码
     "codeBeforHead":``,//其他代码,显示在</head>前
     "codeBeforBody":``,//其他代码,显示在</body>前
@@ -24,7 +24,7 @@ const OPT = {
     "otherCodeC":``,//其他参数A
     "otherCodeD":``,//其他参数A
     "otherCodeE":``,//其他参数A
-    "copyRight" :`Powered by <a href="https://www.cloudflare.com">CF Workers</a> & <a href="https://blog.gezhong.vip">CF-Blog </a>`,//自定义版权信息,建议保留大公无私的 Coudflare 和 作者 的链接
+    "copyRight" :`©️ lukelzlz 的博客 ｜ 保留所有权利 ｜ Powered by <a href="https://www.cloudflare.com">CF Workers</a> & <a href="https://blog.gezhong.vip">CF-Blog </a>`,//自定义版权信息,建议保留大公无私的 Coudflare 和 作者 的链接
 "robots":`User-agent: *
 Disallow: /admin`//robots.txt设置
 };
