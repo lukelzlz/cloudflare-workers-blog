@@ -6,8 +6,8 @@ const OPT = {
     "siteName" : "lukelzlz 的博客",//博客名称
     "siteDescription":"会一直有人陪你，不会有人一直陪你",//博客描述
     "keyWords":"cloudflare,workers,blog,docker,study,php,python,minecraft,linux",//关键字
-    "cacheZoneId":"cc868e8edce4027ad4a735741111111",//清理缓存用 cf区域 ID
-    "cacheToken":"LNxRWH-MPMIGnp8qhyT8FUsjDRN6tdOnmaaaaaaa",//清理缓存用 cf API token
+    "cacheZoneId":"685f52ed13388befb75f5964002fdd01",//清理缓存用 cf区域 ID
+    "cacheToken":"imoekWOlqPCQ6MKrsuL4kZ9_Zbeand0VcBQ1xPiK",//清理缓存用 cf API token
 	
     "pageSize" : 5,//每页文章数
     "recentlySize" : 6,//最近文章数
