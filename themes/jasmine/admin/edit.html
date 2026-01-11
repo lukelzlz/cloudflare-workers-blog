@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>编辑文章 - {{ &OPT.siteName }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
+    <link rel="shoucut icon" href="{{ &OPT.themeURL }}favicon.ico">
+    <style>
+        .editormd { margin-bottom: 0; }
+        .bg-auto { background-color: var(--bs-body-bg); }
+        #middle { min-height: 100vh; }
+    </style>
+</head>
+<body class="bg-auto">
+<script>
+    var dataBsTheme = localStorage.getItem('data-bs-theme')
+    if (!dataBsTheme) {
+        dataBsTheme = 'light'
+    }
+    document.body.setAttribute('data-bs-theme', dataBsTheme)
+</script>
+
+<div class="container bg-body g-0 rounded shadow-sm my-lg-5">
+    <div class="row g-0">
+        <!-- Sidebar -->
+        <div class="col-lg-2 d-none d-lg-block border-end border-light-subtle">
+            <div class="d-flex flex-column align-content-between justify-content-between pt-4 sticky-top" id="left" style="height: 100vh;">
+                <ul class="nav flex-column nav-pills gap-0 row-gap-3 px-3">
+                    <li class="nav-item d-flex justify-content-center mb-4">
+                        <a class="nav-link p-0" href="/" title="返回首页">
+                            <img class="rounded" src="https://cdn.lukelzlz.top/head.png" loading="lazy" width="50" height="50" alt="Logo"/>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link w-100 d-flex align-items-center gap-2" href="/admin/">
+                            <i class="ti ti-arrow-left"></i> 返回列表
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-12 col-lg-10" id="middle">
+            <nav class="navbar navbar-expand-lg border-bottom py-3 fw-medium sticky-top navbar-background border-light-subtle bg-body bg-opacity-75 d-lg-none">
+                <div class="container-fluid px-4">
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/">
+                        <i class="ti ti-arrow-left"></i> 返回列表
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-4">
+                <h2 class="fs-4 mb-4 d-flex align-items-center gap-2"><i class="ti ti-edit"></i> 编辑文章</h2>
+                <form id="editForm" class="row g-3">
+                    <input type="hidden" name="id" id="id">
+                    <div class="col-12">
+                        <input type="text" class="form-control form-control-lg" name="title" id="title" placeholder="文章标题" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">永久链接</label>
+                        <input type="text" class="form-control" name="link" id="link" placeholder="my-post" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">创建日期</label>
+                        <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">特色图片</label>
+                        <input type="url" class="form-control" name="img" id="img" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">分类</label>
+                        <select class="form-select" multiple name="category[]" id="category" style="height: 38px;">
+                            <!-- AJAX content -->
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">标签 (逗号分隔)</label>
+                        <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1, 标签2">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">权重</label>
+                        <input type="number" step="0.1" class="form-control" name="priority" id="priority" value="0.5">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">更新频率</label>
+                        <select class="form-select" id="changefreq" name="changefreq">
+                            <option value="daily">daily</option>
+                            <option value="hourly">hourly</option>
+                            <option value="weekly">weekly</option>
+                            <option value="monthly">monthly</option>
+                            <option value="yearly">yearly</option>
+                            <option value="never">never</option>
+                            <option value="always">always</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div id="content-editor"><textarea style="display:none;"></textarea></div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between">
+                        <button type="button" class="btn btn-danger px-4" onclick="deleteArticle()">删除文章</button>
+                        <button type="button" id="btn_saveEdit" class="btn btn-primary px-5 py-2" onclick="saveEdit()">保存修改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.js"></script>
+
+<script type="text/javascript">
+    var mdEditor;
+    $(function() {
+        var articleJson = <!--{articleJson}-->;
+        var categoryJson = <!--{categoryJson}-->;
+
+        mdEditor = editormd("content-editor", {
+            height: 640,
+            path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+            appendMarkdown: articleJson.contentMD,
+            saveHTMLToTextarea: true,
+            mode: "markdown",
+            tex: true,
+            tocm: true,
+            codeFold: true,
+            theme: (dataBsTheme === 'dark' ? 'dark' : 'default'),
+            editorTheme: (dataBsTheme === 'dark' ? 'pastel-on-dark' : 'default'),
+            previewTheme: (dataBsTheme === 'dark' ? 'dark' : 'default')
+        });
+
+        $('#id').val(articleJson.id);
+        $('#title').val(articleJson.title);
+        $('#img').val(articleJson.img);
+        $('#link').val(articleJson.link);
+        $('#createDate').val(articleJson.createDate.replace(" ", "T"));
+        $('#tags').val(articleJson.tags);
+        $('#priority').val(articleJson.priority || "0.5");
+        $('#changefreq').val(articleJson.changefreq || "daily");
+
+        var categorySelect = $('#category');
+        categorySelect.empty();
+        for (var i = 0; i < categoryJson.length; i++) {
+            categorySelect.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
+        }
+        $('#category').val(articleJson.category);
+    });
+
+    function saveEdit() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/admin/saveEdit/",
+            data: JSON.stringify($("#editForm").serializeArray()),
+            success: function(result) {
+                alert(result.msg);
+            }
+        });
+    }
+
+    function deleteArticle() {
+        if (!confirm("确定删除吗？删除后重新发布才能生效。")) return;
+        var id = $('#id').val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/admin/delete/" + id,
+            data: JSON.stringify([{ "id": id }]),
+            success: function(result) {
+                alert(result.msg);
+                if (result.rst) window.location.href = "/admin/";
+            }
+        });
+    }
+</script>
+</body>
+</html>

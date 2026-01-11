@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>后台管理 - {{ &OPT.siteName }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
+    <link rel="shoucut icon" href="{{ &OPT.themeURL }}favicon.ico">
+    <style>
+        .editormd { margin-bottom: 0; }
+        .nav-pills .nav-link.active { background-color: var(--bs-primary); }
+        .bg-auto { background-color: var(--bs-body-bg); }
+        #middle { min-height: 100vh; }
+        .form-control, .form-select { border-color: var(--bs-border-color); }
+        .form-control:focus, .form-select:focus { border-color: var(--bs-primary); box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25); }
+    </style>
+</head>
+<body class="bg-auto">
+<script>
+    var dataBsTheme = localStorage.getItem('data-bs-theme')
+    if (!dataBsTheme) {
+        dataBsTheme = 'light'
+    }
+    document.body.setAttribute('data-bs-theme', dataBsTheme)
+</script>
+
+<div class="container bg-body g-0 rounded shadow-sm my-lg-5">
+    <div class="row g-0">
+        <!-- Sidebar -->
+        <div class="col-lg-2 d-none d-lg-block border-end border-light-subtle">
+            <div class="d-flex flex-column align-content-between justify-content-between pt-4 sticky-top" id="left" style="height: 100vh;">
+                <ul class="nav flex-column nav-pills gap-0 row-gap-3 px-3" id="adminTab" role="tablist">
+                    <li class="nav-item d-flex justify-content-center mb-4">
+                        <a class="nav-link p-0" href="/" title="返回首页">
+                            <img class="rounded" src="https://cdn.lukelzlz.top/head.png" loading="lazy" width="50" height="50" alt="Logo"/>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 d-flex align-items-center gap-2 active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab">
+                            <i class="ti ti-list"></i> 我的文章
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 d-flex align-items-center gap-2" id="new-tab" data-bs-toggle="tab" data-bs-target="#new" type="button" role="tab">
+                            <i class="ti ti-plus"></i> 新建文章
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 d-flex align-items-center gap-2" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button" role="tab">
+                            <i class="ti ti-settings"></i> 设置
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link w-100 d-flex align-items-center gap-2" id="pub-tab" data-bs-toggle="tab" data-bs-target="#pub" type="button" role="tab">
+                            <i class="ti ti-cloud-upload"></i> 发布
+                        </button>
+                    </li>
+                </ul>
+                <ul class="nav flex-column nav-pills gap-0 row-gap-3 sticky-bottom bottom-0 px-3 pb-4">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2" href="javascript:changeBsTheme()">
+                            <i class="ti ti-sun-moon"></i> 切换模式
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-12 col-lg-10" id="middle">
+            <nav class="navbar navbar-expand-lg border-bottom py-3 fw-medium sticky-top navbar-background border-light-subtle bg-body bg-opacity-75 d-lg-none">
+                <div class="container-fluid px-4">
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                        <img src="https://cdn.lukelzlz.top/head.png" alt="Logo" width="32" height="32" class="rounded"/>
+                        后台管理
+                    </a>
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminMobileNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="adminMobileNav">
+                        <ul class="navbar-nav mt-3 gap-2">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" data-bs-target="#list">我的文章</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" data-bs-target="#new">新建文章</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" data-bs-target="#config">设置</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" data-bs-target="#pub">发布</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="tab-content p-4" id="adminTabContent">
+                <!-- Article List -->
+                <div class="tab-pane fade show active" id="list" role="tabpanel">
+                    <h2 class="fs-4 mb-4 d-flex align-items-center gap-2"><i class="ti ti-list"></i> 我的文章</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="articleList">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 80px;">ID</th>
+                                    <th>标题</th>
+                                    <th style="width: 180px;">创建日期</th>
+                                    <th style="width: 100px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- AJAX content -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="hidden" name="page" id="page" value="1">
+                        <button id="loadmore" class="btn btn-outline-primary px-4">加载更多...</button>
+                    </div>
+                </div>
+
+                <!-- New Article -->
+                <div class="tab-pane fade" id="new" role="tabpanel">
+                    <h2 class="fs-4 mb-4 d-flex align-items-center gap-2" id="labelNew"><i class="ti ti-plus"></i> 新建文章</h2>
+                    <form id="addNewForm" class="row g-3">
+                        <input type="hidden" name="id" id="id">
+                        <div class="col-12">
+                            <input type="text" class="form-control form-control-lg" name="title" id="title" placeholder="文章标题" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">永久链接</label>
+                            <input type="text" class="form-control" name="link" id="link" placeholder="my-post" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">创建日期</label>
+                            <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">特色图片</label>
+                            <input type="url" class="form-control" name="img" id="img" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">分类</label>
+                            <select class="form-select" multiple name="category[]" id="category" style="height: 38px;">
+                                <!-- AJAX content -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">标签 (逗号分隔)</label>
+                            <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1, 标签2">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">权重</label>
+                            <input type="number" step="0.1" class="form-control" name="priority" id="priority" value="0.5">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">更新频率</label>
+                            <select class="form-select" id="changefreq" name="changefreq">
+                                <option value="daily" selected>daily</option>
+                                <option value="hourly">hourly</option>
+                                <option value="weekly">weekly</option>
+                                <option value="monthly">monthly</option>
+                                <option value="yearly">yearly</option>
+                                <option value="never">never</option>
+                                <option value="always">always</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div id="content-editor"><textarea style="display:none;"></textarea></div>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="button" id="btn_saveAddNew" class="btn btn-primary px-5 py-2" onclick="saveAddNew()">保存文章</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Config -->
+                <div class="tab-pane fade" id="config" role="tabpanel">
+                    <h2 class="fs-4 mb-4 d-flex align-items-center gap-2"><i class="ti ti-settings"></i> 站点设置</h2>
+                    <form id="configForm" class="row g-4">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">分类配置 (JSON 数组)</label>
+                            <div class="form-text mb-2">例: <code>["类别A","类别B","类别C"]</code></div>
+                            <textarea class="form-control font-monospace" id="WidgetCategory" name="WidgetCategory" rows="3"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">菜单配置 (JSON 数组)</label>
+                            <div class="form-text mb-2">例: <code>[{"title":"首页","url":"/"},{"title":"关于","url":"/about"}]</code></div>
+                            <textarea class="form-control font-monospace" id="WidgetMenu" name="WidgetMenu" rows="5"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">友情链接 (JSON 数组)</label>
+                            <div class="form-text mb-2">例: <code>[{"title":"Google","url":"https://google.com"}]</code></div>
+                            <textarea class="form-control font-monospace" id="WidgetLink" name="WidgetLink" rows="5"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary px-5" onclick="saveConfig()">保存配置</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-5">
+
+                    <h2 class="fs-4 mb-4 d-flex align-items-center gap-2"><i class="ti ti-database-import"></i> 导入 / 导出</h2>
+                    <form id="importForm" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">导入数据 (JSON)</label>
+                            <textarea class="form-control font-monospace" id="importJson" name="importJson" rows="3" placeholder="粘贴导出的 JSON 数据"></textarea>
+                        </div>
+                        <div class="col-12 d-flex gap-2">
+                            <button type="button" class="btn btn-outline-primary" onclick="importBlog()">导入数据</button>
+                            <a class="btn btn-outline-secondary" href="/admin/export/">导出数据</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Publish -->
+                <div class="tab-pane fade" id="pub" role="tabpanel">
+                    <h2 class="fs-4 mb-4 d-flex align-items-center gap-2"><i class="ti ti-cloud-upload"></i> 发布更新</h2>
+                    <div class="card border-0 bg-light p-4">
+                        <div class="card-body">
+                            <p class="lead mb-4">由于前端使用缓存，以下操作需要发布才能生效：</p>
+                            <ul class="mb-4">
+                                <li>新建或修改文章</li>
+                                <li>修改后台配置</li>
+                                <li>修改 Workers 配置</li>
+                            </ul>
+                            <div class="alert alert-info d-flex align-items-center gap-2">
+                                <i class="ti ti-info-circle fs-4"></i>
+                                <div>发布后，前端可能需要 <strong>Ctrl + F5</strong> 强制刷新才能看到变化。</div>
+                            </div>
+                            <button class="btn btn-primary btn-lg px-5 mt-3" onclick="publish()">立即发布</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.js"></script>
+
+<script type="text/javascript">
+    var mdEditor;
+    $(function() {
+        // 获取初始数据
+        var categoryJson = <!--{categoryJson}-->;
+        var menuJson = <!--{menuJson}-->;
+        var linkJson = <!--{linkJson}-->;
+
+        // 切换模式函数
+        window.changeBsTheme = function() {
+            var currentTheme = document.body.getAttribute('data-bs-theme');
+            var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('data-bs-theme', newTheme);
+            
+            // 更新编辑器主题
+            if (mdEditor) {
+                mdEditor.setTheme(newTheme === 'dark' ? 'dark' : 'default');
+                mdEditor.setEditorTheme(newTheme === 'dark' ? 'pastel-on-dark' : 'default');
+                mdEditor.setPreviewTheme(newTheme === 'dark' ? 'dark' : 'default');
+            }
+        };
+
+        // 初始化编辑器
+        mdEditor = editormd("content-editor", {
+            height: 640,
+            path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+            appendMarkdown: "# 开始写作...",
+            saveHTMLToTextarea: true,
+            mode: "markdown",
+            tex: true,
+            tocm: true,
+            codeFold: true,
+            theme: (dataBsTheme === 'dark' ? 'dark' : 'default'),
+            editorTheme: (dataBsTheme === 'dark' ? 'pastel-on-dark' : 'default'),
+            previewTheme: (dataBsTheme === 'dark' ? 'dark' : 'default')
+        });
+
+        // 表单赋值
+        var now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        $('#createDate').val(now.toISOString().slice(0, 16));
+
+        $('#WidgetCategory').val(JSON.stringify(categoryJson, null, 2));
+        $('#WidgetMenu').val(JSON.stringify(menuJson, null, 2));
+        $('#WidgetLink').val(JSON.stringify(linkJson, null, 2));
+
+        var categorySelect = $('#category');
+        categorySelect.empty();
+        for (var i = 0; i < categoryJson.length; i++) {
+            categorySelect.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
+        }
+
+        // 初始加载文章列表
+        loadArticles();
+    });
+
+    function loadArticles() {
+        var page = $("#page").val();
+        $.ajax({
+            url: "/admin/getList/" + page + "/",
+            type: 'GET',
+            dataType: "json",
+            success: function(data) {
+                var tableContent = "";
+                $.each(data, function(i) {
+                    var info = data[i];
+                    tableContent += '<tr>' +
+                        '<td><span class="badge bg-secondary">' + info.id + '</span></td>' +
+                        '<td><a href="/admin/edit/' + info.id + '/" class="text-decoration-none fw-medium">' + info.title + '</a></td>' +
+                        '<td class="text-body-secondary">' + info.createDate.replace("T", " ") + '</td>' +
+                        '<td><a href="/admin/edit/' + info.id + '/" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> 编辑</a></td>' +
+                        '</tr>';
+                });
+                $("#articleList tbody").append(tableContent);
+                $("#page").val(++page);
+                if (data.length < 20) {
+                    $("#loadmore").hide();
+                }
+            }
+        });
+    }
+
+    $("#loadmore").click(loadArticles);
+
+    function saveAddNew() {
+        if (!$('#title').val() || !$('#createDate').val() || !$('#link').val()) {
+            alert("请填写完整信息");
+            return;
+        }
+        
+        var postURL = "/admin/saveEdit/";
+        if (!$('#id').val()) postURL = "/admin/saveAddNew/";
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: postURL,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify($("#addNewForm").serializeArray()),
+            success: function(result) {
+                if ("id" in result) {
+                    $('#id').val(result.id);
+                    $('#labelNew').html('<i class="ti ti-edit"></i> 编辑文章: ' + result.id);
+                    alert(result.msg);
+                } else {
+                    alert("保存失败: " + (result.msg || "未知错误"));
+                }
+            }
+        });
+    }
+
+    function saveConfig() {
+        try {
+            JSON.parse($('#WidgetCategory').val());
+            JSON.parse($('#WidgetMenu').val());
+        } catch (e) {
+            alert("JSON 格式错误，请检查");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/admin/saveConfig/",
+            data: JSON.stringify($("#configForm").serializeArray()),
+            success: function(result) {
+                alert(result.msg);
+            }
+        });
+    }
+
+    function importBlog() {
+        if (!$('#importJson').val()) return;
+        try {
+            JSON.parse($('#importJson').val());
+        } catch (e) {
+            alert("导入格式错误");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/admin/import/",
+            data: JSON.stringify($("#importForm").serializeArray()),
+            success: function(result) {
+                alert(result.msg);
+            }
+        });
+    }
+
+    function publish() {
+        if (!confirm("确定发布吗？这将清理所有静态缓存并重新生成。")) return;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/admin/publish/",
+            success: function(result) {
+                alert(result.msg);
+            }
+        });
+    }
+</script>
+</body>
+</html>
