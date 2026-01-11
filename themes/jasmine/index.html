@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ &title }}</title>
+    <link href="https://b.lukelzlz.top/usr/themes/jasmine/assets/ms/font.css" rel="stylesheet">
+    <link href="https://b.lukelzlz.top/usr/themes/jasmine/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://b.lukelzlz.top/usr/themes/jasmine/assets/main/main.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://b.lukelzlz.top/usr/themes/jasmine/assets/highlight/github-dark-dimmed.css">
+    <link rel="stylesheet" href="https://b.lukelzlz.top/usr/themes/jasmine/assets/ti/tabler-icons.min.css">
+    <link rel="shoucut icon" href="{{ &OPT.themeURL }}favicon.ico">
+    <script src="https://b.lukelzlz.top/usr/themes/jasmine/assets/highlight/highlight.min.js"></script>
+    <meta name="description" content="{{ &OPT.siteDescription }}" />
+    <meta name="keywords" content="{{ &keywords }}" />
+    {{ &OPT.codeBeforHead }}
+</head>
+<body class="bg-auto">
+<script>
+    var dataBsTheme = localStorage.getItem('data-bs-theme')
+    if (!dataBsTheme) {
+        dataBsTheme = 'light'
+    }
+    document.body.setAttribute('data-bs-theme', dataBsTheme)
+    localStorage.setItem("data-bs-theme", dataBsTheme);
+</script>
+<div style="height: 60px" id="top" class="d-none d-lg-block"></div>
+<div class="container bg-body g-0 rounded shadow-sm">
+    <div class="row g-0">
+
+<div class="col-lg-1 d-none d-lg-block border-end border-light-subtle">
+    <div class="d-flex flex-column align-content-between justify-content-between pt-4 sticky-top" id="left">
+        <ul class="nav flex-column nav-pills gap-0 row-gap-3">
+            <li class="nav-item d-flex justify-content-center mb-4">
+                <a class="nav-link p-0" href="/" title="{{ &OPT.siteName }}">
+                    <img class="rounded" src="https://cdn.lukelzlz.top/head.png" loading="lazy" width="50" height="50" alt="{{ &OPT.siteName }}"/>
+                </a>
+            </li>
+            <li class="nav-item d-flex justify-content-center position-relative">
+                <a class="nav-link p-0 d-flex align-items-center justify-content-center" href="/" title="{{ &OPT.siteName }}">
+                    <i class="ti ti-home"></i>
+                </a>
+                <span class="position-absolute nav-item-title text-nowrap">首页</span>
+            </li>
+            {{ #widgetMenuList }}
+            <li class="nav-item d-flex justify-content-center position-relative">
+                <a class="nav-link p-0 d-flex align-items-center justify-content-center" href="{{ &url }}" title="{{ &title }}">
+                    <i class="ti ti-category"></i>
+                </a>
+                <span class="position-absolute nav-item-title text-nowrap">{{ &title }}</span>
+            </li>
+            {{ /widgetMenuList }}
+        </ul>
+        <ul class="nav flex-column nav-pills gap-0 row-gap-3 sticky-bottom bottom-0">
+            <li class="nav-item d-flex justify-content-center position-relative">
+                <a class="nav-link p-0 d-flex align-items-center justify-content-center" id="bd-theme" href="javascript:changeBsTheme()">
+                    <i class="ti ti-sun-moon px-3 py-1 rounded"></i>
+                </a>
+                <span class="position-absolute nav-item-title text-nowrap">切换模式</span>
+            </li>
+            <li class="nav-item d-flex justify-content-center position-relative">
+                <a class="nav-link p-0 d-flex align-items-center justify-content-center" href="#top">
+                    <i class="ti ti-chevrons-up px-3 py-1 rounded"></i>
+                </a>
+                <span class="position-absolute nav-item-title text-nowrap">返回顶部</span>
+            </li>
+        </ul>
+    </div>
+</div>
+    <div class="col-md-12 col-lg-8" id="middle">
+        
+<nav class="navbar navbar-expand-lg border-bottom py-0 fw-medium sticky-top navbar-background border-light-subtle bg-body bg-opacity-75">
+    <div class="container-fluid p-lg-4 px-4 py-3">
+        <a class="navbar-brand d-block d-lg-none nav-link p-0 d-flex align-items-center justify-content-center column-gap-1" href="/">
+            <img src="https://cdn.lukelzlz.top/head.png" alt="{{ &OPT.siteName }}" width="42" loading="lazy" height="42" class="d-inline-block align-text-top rounded"/>
+            {{ &OPT.siteName }}
+        </a>
+        <div class="d-flex d-block d-lg-none">
+            <a class="nav-link p-0 d-flex align-items-center justify-content-center" id="bd-theme" href="javascript:changeBsTheme()">
+                <i class="ti ti-sun-moon px-3 py-1 rounded fs-5"></i>
+            </a>
+            <button class="navbar-toggler border-0 pe-0" type="button" data-bs-toggle="offcanvas" href="#mobile-navbar" role="button" aria-controls="mobile-navbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse pt-3 pt-lg-0 overflow-x-auto" id="navbarNav">
+            <ul class="navbar-nav column-gap-5 me-auto flex-lg-wrap flex-nowrap list-group-horizontal" id="navbarNavLeft">
+                <li class="nav-item">
+                    <a class="nav-link px-0 py-0 text-nowrap active" href="/" title="{{ &OPT.siteName }}">首页</a>
+                </li>
+                {{ #widgetCategoryList }}
+                <li class="nav-item">
+                    <a class="nav-link px-0 py-0 text-nowrap" href="{{ &url }}">{{ &title }}</a>
+                </li>
+                {{ /widgetCategoryList }}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="offcanvas offcanvas-start w-75" tabindex="-1" id="mobile-navbar" aria-labelledby="mobile-navbarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="mobile-navbarLabel">导航</h5>
+        <button type="button" class="btn-close lh-sm" data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-column row-gap-4 align-content-between justify-content-between h-100">
+            <div class="d-flex flex-column row-gap-4 navbar-nav">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active border-0" href="/" title="{{ &OPT.siteName }}">首页</a>
+                    {{ #widgetCategoryList }}
+                    <a class="list-group-item list-group-item-action" href="{{ &url }}">{{ &title }}</a>
+                    {{ /widgetCategoryList }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid p-4 d-flex flex-column row-gap-4" id="index-content">
+    {{ #articleList }}
+    <article class="card border-0 py-3 col-12 block">
+        <div class="d-flex column-gap-2 overflow-hidden">
+            <div class="card-body p-0 d-flex flex-column justify-content-between row-gap-1">
+                <h3 class="card-title fs-5 fw-normal">
+                    <a href="/article/{{&id}}/{{&link}}.html" title="{{ &title }}">{{ &title }}</a>
+                </h3>
+                <p class="card-text more text-body-secondary">{{ &contentText }}</p>
+                <p class="card-text">
+                    <small class="text-body-tertiary">
+                        {{ #category }}
+                        <a href="/category/{{&.}}">{{&.}}</a>
+                        {{ /category }}
+                        · {{ &createDate10 }}
+                    </small>
+                </p>
+            </div>
+            {{ #img }}
+            <a href="/article/{{&id}}/{{&link}}.html" class="rounded ms-auto border border-light-subtle thumbnail d-none d-lg-block" title="{{ &title }}" style="background-image: url('{{ &img }}')"></a>
+            {{ /img }}
+        </div>
+    </article>
+    {{ /articleList }}
+
+    <div class="col-12 d-flex justify-content-center align-items-center my-3" id="pagination">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center align-items-center column-gap-3 my-0">
+                {{ #pageNewer }}
+                <li class="prev"><a href="{{ &url }}">&laquo; 上一页</a></li>
+                {{ /pageNewer }}
+                {{ #pageOlder }}
+                <li class="next"><a href="{{ &url }}">下一页 &raquo;</a></li>
+                {{ /pageOlder }}
+            </ul>
+        </nav>
+    </div>
+</div>
+    </div>
+
+<div class="col-lg-3 sticky-bottom d-none d-lg-block border-start border-light-subtle" id="right">
+    <div class="container-fluid p-4 border-bottom border-light-subtle">
+        <div class="row gap-2">
+            <div class="col-12">
+                <p class="text-body-secondary text-truncate mb-0 fs-6 py-1">{{ &OPT.siteDescription }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="sticky-top">
+        <div class="container-fluid p-4 mt-3 border-bottom border-light-subtle">
+            <div class="row gap-2">
+                <div class="col-12">
+                    <div class="col-12 d-flex gap-1 align-content-center">
+                        <i class="ti ti-chart-bar lh-base"></i>
+                        <h6 class="lh-base">近期文章</h6>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="text-body-secondary" style="line-height: 32px">
+                        <ul class="list-group list-group-flush">
+                            {{ #widgetRecentlyList }}
+                            <li class="list-group-item p-0 border-0">
+                                <a href="{{ &url }}" title="{{ &title }}">{{ &title }}</a>
+                            </li>
+                            {{ /widgetRecentlyList }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid p-4 mt-3 border-bottom border-light-subtle">
+            <div class="row gap-2">
+                <div class="col-12 d-flex gap-1 align-content-center justify-content-start fw-medium">
+                    <i class="ti ti-tags lh-base"></i>
+                    <h6 class="lh-base">热门标签</h6>
+                </div>
+                <div class="col-12">
+                    <div class="text-body-secondary" style="line-height: 32px">
+                        <ul class="list-group flex-wrap list-group-horizontal row-gap-1 column-gap-3">
+                            {{ #widgetTagsList }}
+                            <li class="list-group-item p-0 border-0">
+                                <a href="{{ &url }}" title="{{ &title }}">{{ &title }}</a>
+                            </li>
+                            {{ /widgetTagsList }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid p-4 mt-3">
+            <div class="row gap-2">
+                <div class="col-12 d-flex gap-1 align-content-center justify-content-start fw-medium">
+                    <i class="ti ti-link lh-base"></i>
+                    <h6 class="lh-base">友情链接</h6>
+                </div>
+                <div class="col-12">
+                    <div class="text-body-secondary" style="line-height: 32px">
+                        <ul class="list-group list-group-flush">
+                            {{ #widgetLinkList }}
+                            <li class="list-group-item p-0 border-0">
+                                <a href="{{ &url }}" title="{{ &title }}">{{ &title }}</a>
+                            </li>
+                            {{ /widgetLinkList }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div style="height: 80px"></div>
+<div class="container text-body-tertiary">
+    <div class="row">
+        <div class="col-12">
+            <i class="ti ti-copyright"></i> {{ &OPT.siteName }}. All Rights Reserved. {{ &OPT.copyRight }}
+        </div>
+    </div>
+</div>
+<script src="https://b.lukelzlz.top/usr/themes/jasmine/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://b.lukelzlz.top/usr/themes/jasmine/assets/main/main.js"></script>
+{{ &OPT.codeBeforBody }}
+</body>
+</html>
