@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
-    <link rel="shoucut icon" href="{{ &OPT.themeURL }}favicon.ico">
+    <link rel="shortcut icon" href="{{ &OPT.themeURL }}favicon.ico">
     <style>
         .editormd { margin-bottom: 0; }
         .nav-pills .nav-link.active { background-color: var(--bs-primary); }
@@ -327,9 +327,13 @@
             alert("请填写完整信息");
             return;
         }
-        
+
         var postURL = "/admin/saveEdit/";
         if (!$('#id').val()) postURL = "/admin/saveAddNew/";
+
+        // 添加Loading状态
+        var btn = $('#btn_saveAddNew');
+        btn.prop('disabled', true).text('保存中...');
 
         $.ajax({
             type: "POST",
@@ -345,6 +349,13 @@
                 } else {
                     alert("保存失败: " + (result.msg || "未知错误"));
                 }
+            },
+            complete: function() {
+                // 恢复按钮状态
+                btn.prop('disabled', false).text('保存文章');
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }
@@ -358,6 +369,10 @@
             return;
         }
 
+        var btn = $('#configForm button[type="button"]');
+        var originalText = btn.text();
+        btn.prop('disabled', true).text('保存中...');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -366,6 +381,12 @@
             data: JSON.stringify($("#configForm").serializeArray()),
             success: function(result) {
                 alert(result.msg);
+            },
+            complete: function() {
+                btn.prop('disabled', false).text(originalText);
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }
@@ -378,6 +399,11 @@
             alert("导入格式错误");
             return;
         }
+
+        var btn = $('#importForm button[type="button"]');
+        var originalText = btn.text();
+        btn.prop('disabled', true).text('导入中...');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -386,12 +412,23 @@
             data: JSON.stringify($("#importForm").serializeArray()),
             success: function(result) {
                 alert(result.msg);
+            },
+            complete: function() {
+                btn.prop('disabled', false).text(originalText);
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }
 
     function publish() {
         if (!confirm("确定发布吗？这将清理所有静态缓存并重新生成。")) return;
+
+        var btn = $('#pub button[type="button"]');
+        var originalText = btn.text();
+        btn.prop('disabled', true).text('发布中...');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -399,6 +436,12 @@
             url: "/admin/publish/",
             success: function(result) {
                 alert(result.msg);
+            },
+            complete: function() {
+                btn.prop('disabled', false).text(originalText);
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }

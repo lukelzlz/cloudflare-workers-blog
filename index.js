@@ -1,13 +1,21 @@
 'use strict';
+// 从环境变量获取敏感信息，如果未设置则使用默认值
+const ENV = {
+    user: typeof USER !== 'undefined' ? USER : "lukelzlz",
+    password: typeof PASSWORD !== 'undefined' ? PASSWORD : "lukelzlz2009",
+    cacheToken: typeof CACHE_TOKEN !== 'undefined' ? CACHE_TOKEN : "imoekWOlqPCQ6MKrsuL4kZ9_Zbeand0VcBQ1xPiK",
+    cacheZoneId: typeof CACHE_ZONE_ID !== 'undefined' ? CACHE_ZONE_ID : "685f52ed13388befb75f5964002fdd01"
+};
+
 const OPT = {
-    "user" : "lukelzlz", //后台密码请修改
-    "password" : "lukelzlz2009", //后台密码
+    "user" : ENV.user,
+    "password" : ENV.password,
     "siteDomain" : "blog.lukelzlz.top",// 域名(不带https 也不带/)
     "siteName" : "lukelzlz 的博客",//博客名称
     "siteDescription":"会一直有人陪你，不会有人一直陪你",//博客描述
     "keyWords":"cloudflare,workers,blog,docker,study,php,python,minecraft,linux",//关键字
-    "cacheZoneId":"685f52ed13388befb75f5964002fdd01",//清理缓存用 cf区域 ID
-    "cacheToken":"imoekWOlqPCQ6MKrsuL4kZ9_Zbeand0VcBQ1xPiK",//清理缓存用 cf API token
+    "cacheZoneId": ENV.cacheZoneId,
+    "cacheToken": ENV.cacheToken
 	
     "pageSize" : 5,//每页文章数
     "recentlySize" : 6,//最近文章数

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
-    <link rel="shoucut icon" href="{{ &OPT.themeURL }}favicon.ico">
+    <link rel="shortcut icon" href="{{ &OPT.themeURL }}favicon.ico">
     <style>
         .editormd { margin-bottom: 0; }
         .bg-auto { background-color: var(--bs-body-bg); }
@@ -139,7 +139,24 @@
         $('#title').val(articleJson.title);
         $('#img').val(articleJson.img);
         $('#link').val(articleJson.link);
-        $('#createDate').val(articleJson.createDate.replace(" ", "T"));
+        // 修复日期格式处理：确保日期格式正确
+        var formattedDate = '';
+        if (articleJson.createDate) {
+            try {
+                var dateObj = new Date(articleJson.createDate);
+                if (!isNaN(dateObj.getTime())) {
+                    var year = dateObj.getFullYear();
+                    var month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    var day = String(dateObj.getDate()).padStart(2, '0');
+                    var hours = String(dateObj.getHours()).padStart(2, '0');
+                    var minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    formattedDate = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+                }
+            } catch (e) {
+                console.error('Error formatting date:', e);
+            }
+        }
+        $('#createDate').val(formattedDate);
         $('#tags').val(articleJson.tags);
         $('#priority').val(articleJson.priority || "0.5");
         $('#changefreq').val(articleJson.changefreq || "daily");
@@ -149,10 +166,18 @@
         for (var i = 0; i < categoryJson.length; i++) {
             categorySelect.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
         }
-        $('#category').val(articleJson.category);
+        // 修复多选分类初始化问题：确保category是数组
+        if (Array.isArray(articleJson.category)) {
+            $('#category').val(articleJson.category);
+        } else if (articleJson.category) {
+            $('#category').val([articleJson.category]);
+        }
     });
 
     function saveEdit() {
+        var btn = $('#btn_saveEdit');
+        btn.prop('disabled', true).text('保存中...');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -161,6 +186,12 @@
             data: JSON.stringify($("#editForm").serializeArray()),
             success: function(result) {
                 alert(result.msg);
+            },
+            complete: function() {
+                btn.prop('disabled', false).text('保存修改');
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }
@@ -168,6 +199,11 @@
     function deleteArticle() {
         if (!confirm("确定删除吗？删除后重新发布才能生效。")) return;
         var id = $('#id').val();
+
+        var btn = $('#editForm button[type="button"].btn-danger');
+        var originalText = btn.text();
+        btn.prop('disabled', true).text('删除中...');
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -177,6 +213,12 @@
             success: function(result) {
                 alert(result.msg);
                 if (result.rst) window.location.href = "/admin/";
+            },
+            complete: function() {
+                btn.prop('disabled', false).text(originalText);
+            },
+            error: function(xhr, status, error) {
+                alert("请求失败: " + (error || "网络错误"));
             }
         });
     }
